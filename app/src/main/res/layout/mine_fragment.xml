@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/mine_linearlayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="100">
+
+        <Button
+            android:id="@+id/mine_local_music_button"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_weight="50"
+            android:background="@drawable/mine_button"
+            android:drawableLeft="@mipmap/_headphone_big"
+            android:drawablePadding="20dp"
+            android:gravity="left|center_vertical"
+            android:padding="20dp"
+            android:text="本地音乐"
+            android:textSize="18sp"
+            />
+
+        <Button
+            android:id="@+id/mine_favourte_button"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_weight="50"
+            android:background="@drawable/mine_button"
+            android:drawableLeft="@mipmap/_heart"
+            android:drawablePadding="20dp"
+            android:gravity="left|center_vertical"
+            android:padding="10dp"
+            android:text="我的收藏"
+            android:textSize="18sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/mine_linearlayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mine_linearlayout1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/mine_my_music_list"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="20dp"
+            android:background="#ffffff"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:text="我的歌单"
+            android:textAllCaps="false"
+            android:textColor="#000000"
+            android:textSize="18sp"/>
+
+        <Button
+            android:id="@+id/mine_my_music_import"
+            android:layout_width="@dimen/x64"
+            android:layout_height="@dimen/x16"
+            android:background="?android:attr/selectableItemBackground"
+            android:text="导入歌单"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="20dp">
+
+        </android.support.v7.widget.RecyclerView>
+
+        <TextView
+            android:id="@+id/mine_blank_textview"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="赶快创建一个歌单吧"
+            android:textSize="32sp"/>
+    </LinearLayout>
+</RelativeLayout>

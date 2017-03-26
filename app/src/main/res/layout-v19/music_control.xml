@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="wrap_content"
+                                             android:background="#eaffffff"
+                                             android:baselineAligned="false"
+                                             android:orientation="horizontal"
+                                             android:weightSum="100">
+
+    <ImageView
+        android:id="@+id/music_control_cover"
+        android:layout_width="59dp"
+        android:layout_height="56dp"
+        android:layout_marginLeft="16dp"
+
+        android:layout_marginStart="16dp"
+        android:src="@drawable/ic_32_multimeda_music_note"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <TextView
+        android:id="@+id/music_control__song"
+        android:layout_width="165dp"
+        android:layout_height="25dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:maxEms="3"
+        android:paddingTop="5dp"
+        android:text=""
+        android:maxLines="1"
+        android:ellipsize="marquee"
+
+        android:textColor="#000000"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/music_control_cover"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.110000014"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintTop_creator="1"/>
+
+    <TextView
+
+        android:id="@+id/music_control__singer"
+        android:layout_width="71dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:ems="2"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/music_control_cover"/>
+
+
+    <ImageButton
+        android:id="@+id/music_control__pre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/ic_previous"
+        android:background="@drawable/play_button"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/music_control__play"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_conversion_absoluteHeight="41dp"
+        tools:layout_conversion_absoluteWidth="13dp"
+        tools:layout_conversion_absoluteX="160dp"
+        tools:layout_conversion_absoluteY="4dp"/>
+
+    <ImageButton
+        android:id="@+id/music_control__play"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:clickable="true"
+        android:src="@drawable/ic_play"
+        android:background="@drawable/play_button"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/music_control__next"
+        tools:layout_conversion_absoluteHeight="41dp"
+        tools:layout_conversion_absoluteWidth="13dp"
+        tools:layout_conversion_absoluteX="183dp"
+        tools:layout_conversion_absoluteY="4dp"/>
+
+    <ImageButton
+        android:id="@+id/music_control__next"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:src="@drawable/ic_next"
+        android:background="@drawable/play_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_conversion_absoluteHeight="41dp"
+        tools:layout_conversion_absoluteWidth="11dp"
+        tools:layout_conversion_absoluteX="206dp"
+        tools:layout_conversion_absoluteY="4dp"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="22dp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="22dp"/>
+
+
+</android.support.constraint.ConstraintLayout>

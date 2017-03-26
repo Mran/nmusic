@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest package="com.mran.nmusic"
+          xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <application
+        android:name=".BaseApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme.NoActionBar">
+        <activity
+            android:name=".mainactivity.MainActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+<receiver android:name=".service.MusicControlBroadReciver">
+    <intent-filter>
+        <action android:name="com.mran.nmusic.PLAY"/>
+        <action android:name="com.mran.nmusic.NEXT"/>
+        <action android:name="com.mran.nmusic.STOP"/>
+    </intent-filter>
+</receiver>
+        <service android:name=".service.PlayService"/>
+        <meta-data
+            android:name="com.mran.nmusic.netease.musiclist.adapter.MyGlideModule"
+            android:value="GlideModule"/>
+    </application>
+
+</manifest>
