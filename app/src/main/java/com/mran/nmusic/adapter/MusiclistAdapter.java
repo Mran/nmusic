@@ -1,4 +1,4 @@
-package com.mran.nmusic.netease.musiclist.adapter;
+package com.mran.nmusic.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mran.nmusic.R;
-import com.mran.nmusic.net.cloudmusic.bean.MusicListBean;
+import com.mran.nmusic.bean.MusicListBean;
 
 import java.util.ArrayList;
 import java.util.List;

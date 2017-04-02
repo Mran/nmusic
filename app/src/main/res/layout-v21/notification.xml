@@ -41,7 +41,7 @@
     </LinearLayout>
 
     <ImageButton
-        android:id="@+id/notification__play"
+        android:id="@+id/notification_play"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:background="?android:attr/selectableItemBackgroundBorderless"

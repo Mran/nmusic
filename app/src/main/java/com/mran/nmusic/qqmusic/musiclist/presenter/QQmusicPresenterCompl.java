@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.mran.nmusic.BuildConfig;
 import com.mran.nmusic.Constant;
-import com.mran.nmusic.net.cloudmusic.bean.MusicListBean;
+import com.mran.nmusic.bean.MusicListBean;
 import com.mran.nmusic.net.qqmusic.api.QQmusicApi;
 import com.mran.nmusic.net.qqmusic.jsonadapter.QQmusicRecommendMusicListJson;
 import com.mran.nmusic.net.qqmusic.util.QQmusicParse;

@@ -1,4 +1,4 @@
-package com.mran.nmusic.netease.musiclistdetail.adapter;
+package com.mran.nmusic.adapter;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
@@ -9,8 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mran.nmusic.R;
-import com.mran.nmusic.net.cloudmusic.bean.MusicListBean;
-import com.mran.nmusic.net.cloudmusic.bean.MusicListDetailBean;
+import com.mran.nmusic.bean.MusicListDetailBean;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -20,6 +20,12 @@ public class Constant {
     public static final String MUSIC_CONTORL_STOP = "com.mran.nmusic.STOP";
     public static final String MUSIC_CONTORL_PRE = "com.mran.nmusic.PRE";
     public static final String MUSIC_CONTORL_NEXT = "com.mran.nmusic.NEXT";
+    public static final String MUSIC_NOTIFICATION_CONTORL_STOP = "com.mran.nmusic.NOTIFICATION_STOP";
+    public static final String MUSIC_NOTIFICATION_CONTORL_NEXT = "com.mran.nmusic.NOTIFICATION_NEXT";
+    public static final String MUSIC_NOTIFICATION_CONTORL_PLAY = "com.mran.nmusic.NOTIFICATION_PLAY";
+
+    public static final String MUSIC_CHANGE = "com.mran.nmusic.CHANGE";
+
     public static final String MUSIC_CONTORL_SONGNAME = "MUSIC_CONTORL_SONGNAME";
     public static final String MUSIC_CONTORL_SINGER = "MUSIC_CONTORL_SINGER";
     public static final String MUSIC_CONTORL_IMAGEURL = "MUSIC_CONTORL_IMAGEURL";
@@ -27,9 +33,10 @@ public class Constant {
     public static final int NETEASETAG = 2;
     public static final int XIAMITAG = 1;
     public static final int QQTAG = 0;
-    public static final int ONEREPEAT=3;
-    public static final int ALLREPEAT=4;
-    public static final int SHUFFLE=5;
+    public static final int ONEREPEAT=3;//单曲循环
+    public static final int ALLREPEAT=4;//全部循环
+    public static final int SHUFFLE=5;//随机
     public static final String MUSIC_SEARCH = "MUSIC_SEARCH";
+
 
 }

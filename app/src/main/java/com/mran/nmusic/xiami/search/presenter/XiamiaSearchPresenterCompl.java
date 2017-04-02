@@ -1,6 +1,6 @@
 package com.mran.nmusic.xiami.search.presenter;
 
-import com.mran.nmusic.net.cloudmusic.bean.MusicListDetailBean;
+import com.mran.nmusic.bean.MusicListDetailBean;
 import com.mran.nmusic.net.xiamimusic.api.XiamiMusicApi;
 import com.mran.nmusic.net.xiamimusic.jsonadapter.XiamiSeachJson;
 import com.mran.nmusic.net.xiamimusic.util.XiamiparseHtml;

@@ -65,7 +65,7 @@
         android:src="@drawable/ic_previous"
         android:background="@drawable/play_button"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/music_control__play"
+        app:layout_constraintRight_toLeftOf="@+id/music_control_play"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_conversion_absoluteHeight="41dp"
         tools:layout_conversion_absoluteWidth="13dp"
@@ -73,7 +73,7 @@
         tools:layout_conversion_absoluteY="4dp"/>
 
     <ImageButton
-        android:id="@+id/music_control__play"
+        android:id="@+id/music_control_play"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginBottom="16dp"
@@ -83,14 +83,14 @@
         android:clickable="true"
         android:src="@drawable/ic_play"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/music_control__next"
+        app:layout_constraintRight_toLeftOf="@+id/music_control_next"
         tools:layout_conversion_absoluteHeight="41dp"
         tools:layout_conversion_absoluteWidth="13dp"
         tools:layout_conversion_absoluteX="183dp"
         tools:layout_conversion_absoluteY="4dp"/>
 
     <ImageButton
-        android:id="@+id/music_control__next"
+        android:id="@+id/music_control_next"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginBottom="16dp"

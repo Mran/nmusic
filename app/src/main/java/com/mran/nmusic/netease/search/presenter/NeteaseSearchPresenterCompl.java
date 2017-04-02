@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.mran.nmusic.BuildConfig;
 import com.mran.nmusic.net.cloudmusic.api.CloudMusicApi;
-import com.mran.nmusic.net.cloudmusic.bean.MusicListDetailBean;
+import com.mran.nmusic.bean.MusicListDetailBean;
 import com.mran.nmusic.net.cloudmusic.jsonadapter.CloudMusicSearchJson;
 import com.mran.nmusic.net.cloudmusic.util.CloudMusicParse;
 import com.mran.nmusic.netease.search.view.INeteaseSearchFragment;

@@ -9,10 +9,11 @@ import android.widget.Toast;
 
 import com.mran.nmusic.BaseApplication;
 import com.mran.nmusic.BaseFragment;
+import com.mran.nmusic.service.MusicPlayer;
 import com.mran.nmusic.R;
+import com.mran.nmusic.adapter.MusicSearchAdapter;
+import com.mran.nmusic.bean.MusicListDetailBean;
 import com.mran.nmusic.mainactivity.MainActivity;
-import com.mran.nmusic.net.cloudmusic.bean.MusicListDetailBean;
-import com.mran.nmusic.netease.search.adapter.MusicSearchAdapter;
 import com.mran.nmusic.netease.search.presenter.NeteaseSearchPresenterCompl;
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;
 
@@ -62,7 +63,8 @@ private MainActivity mainActivity;
 
     @Override
     public void onItemClick(View view, int position, MusicListDetailBean musicListDetailBean) {
-        mainActivity.add(musicListDetailBean);
+        MusicPlayer.addMusic(musicListDetailBean);
+
     }
 
     @Override

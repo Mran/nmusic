@@ -20,10 +20,11 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.mran.nmusic.BaseApplication;
 import com.mran.nmusic.BaseFragment;
+import com.mran.nmusic.service.MusicPlayer;
 import com.mran.nmusic.R;
+import com.mran.nmusic.adapter.MusiclistDetailAdapter;
+import com.mran.nmusic.bean.MusicListDetailBean;
 import com.mran.nmusic.mainactivity.MainActivity;
-import com.mran.nmusic.net.cloudmusic.bean.MusicListDetailBean;
-import com.mran.nmusic.netease.musiclistdetail.adapter.MusiclistDetailAdapter;
 import com.mran.nmusic.netease.search.view.MusicSearchRecycleviewItemDecoration;
 import com.mran.nmusic.qqmusic.musiclistdetail.presenter.QQMusiclistDetailPresenterCompl;
 
@@ -115,7 +116,7 @@ public class QQMusicListDetailFragment extends BaseFragment implements IQQMusicL
         musiclistDetailAdapter.setOnRecyclerItemClickListener(this);
         listRecyclerView.setLayoutManager(new LinearLayoutManager(BaseApplication.getContext()));
         listRecyclerView.setAdapter(musiclistDetailAdapter);
-        listRecyclerView.addItemDecoration(new MusicSearchRecycleviewItemDecoration(BaseApplication.getContext(),0.1));
+        listRecyclerView.addItemDecoration(new MusicSearchRecycleviewItemDecoration(BaseApplication.getContext(), 0.1));
 
         listRecyclerView.setNestedScrollingEnabled(false);
         qqMusiclistDetailPresenterCompl.getMusicListDetail(listid);
@@ -146,7 +147,7 @@ public class QQMusicListDetailFragment extends BaseFragment implements IQQMusicL
         int id = v.getId();
         switch (id) {
             case R.id.musiclist_detail_fragment_playall_button:
-                mainActivity.playall(qqMusiclistDetailPresenterCompl.getMlistDetailBeen());
+                MusicPlayer.addMusicList(qqMusiclistDetailPresenterCompl.getMlistDetailBeen());
                 break;
             default:
                 break;
@@ -157,7 +158,7 @@ public class QQMusicListDetailFragment extends BaseFragment implements IQQMusicL
 
     @Override
     public void onItemClick(View view, int position, MusicListDetailBean musicListDetailBean) {
-        mainActivity.add(musicListDetailBean);
+        MusicPlayer.addMusic(musicListDetailBean);
 
     }
 }

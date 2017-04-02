@@ -1,13 +1,11 @@
 package com.mran.nmusic.mainactivity;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -31,20 +29,18 @@ import com.mran.nmusic.BaseActivity;
 import com.mran.nmusic.BaseApplication;
 import com.mran.nmusic.BuildConfig;
 import com.mran.nmusic.Constant;
+import com.mran.nmusic.service.MusicPlayer;
 import com.mran.nmusic.R;
+import com.mran.nmusic.adapter.MusiclistDetailAdapter;
+import com.mran.nmusic.bean.MusicListDetailBean;
 import com.mran.nmusic.fragmentutil.FragmentControl;
 import com.mran.nmusic.main.view.MainFragment;
 import com.mran.nmusic.mainactivity.presenter.MainActivityPresenterCompl;
 import com.mran.nmusic.mainactivity.view.IMainActivity;
 import com.mran.nmusic.musicplaying.view.MusicPlayingFragment;
-import com.mran.nmusic.net.cloudmusic.bean.MusicListDetailBean;
-import com.mran.nmusic.netease.musiclistdetail.adapter.MusiclistDetailAdapter;
-import com.mran.nmusic.service.PlayService;
-
-import java.util.List;
 
 public class MainActivity extends BaseActivity implements IMainActivity, View.OnClickListener, View.OnTouchListener, MusiclistDetailAdapter.OnRecyclerItemClickedListener {
-    MainActivityPresenterCompl mainActivityPresenterCompl;
+    private MainActivityPresenterCompl mainActivityPresenterCompl;
     private ImageButton bottomMusicControlPlay;
     private boolean isplaying = false;
 
@@ -59,7 +55,7 @@ public class MainActivity extends BaseActivity implements IMainActivity, View.On
     private LinearLayout musicControlLinearLayout;
     private RecyclerView bottomsheetPlaylistRecycleview;
     private BottomSheetBehavior bottomSheetBehavior;
-    private PlayService.MusicControlBinder musicControlBinder;
+
     private MusicControlLocalReciver musicControlLocalReciver;
     private LocalBroadcastManager localBroadcastManager;
     private ServiceConnection playServiceConnection;
@@ -87,8 +83,8 @@ public class MainActivity extends BaseActivity implements IMainActivity, View.On
         MainFragment mainFragment = new MainFragment();
         bottomMusicControlCoverImage = (ImageView) findViewById(R.id.music_control_cover);
         bottomMusicControlPre = (ImageButton) findViewById(R.id.music_control__pre);
-        bottomMusicControlPlay = (ImageButton) findViewById(R.id.music_control__play);
-        bottomMusicControlNext = (ImageButton) findViewById(R.id.music_control__next);
+        bottomMusicControlPlay = (ImageButton) findViewById(R.id.music_control_play);
+        bottomMusicControlNext = (ImageButton) findViewById(R.id.music_control_next);
         bottomMusicControlSinger = (TextView) findViewById(R.id.music_control__singer);
         bottomMusicControlSongName = (TextView) findViewById(R.id.music_control__song);
         musicControlLinearLayout = (LinearLayout) findViewById(R.id.main_fragment_music_control);
@@ -112,18 +108,6 @@ public class MainActivity extends BaseActivity implements IMainActivity, View.On
 
     void initcontrol() {
 
-        playServiceConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                musicControlBinder = (PlayService.MusicControlBinder) service;
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-
-            }
-        };
-
         mainActivityPresenterCompl = new MainActivityPresenterCompl(this, this);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constant.MUSIC_CONTORL_PLAY);
@@ -137,9 +121,7 @@ public class MainActivity extends BaseActivity implements IMainActivity, View.On
     }
 
     void startMyService() {
-        Intent musicPlay = new Intent(BaseApplication.getContext(), PlayService.class);
-        bindService(musicPlay, playServiceConnection, BIND_AUTO_CREATE);
-        startService(musicPlay);
+        MusicPlayer.bindService(this);
     }
 
     @Override
@@ -147,42 +129,29 @@ public class MainActivity extends BaseActivity implements IMainActivity, View.On
         int id = v.getId();
         switch (id) {
             case R.id.music_control__pre:
-                musicControlBinder.stop();
 
-                mainActivityPresenterCompl.pre(true);
+                MusicPlayer.previours();
                 break;
-            case R.id.music_control__play:
-                if (mainActivityPresenterCompl.getListsize() == 0) {
+            case R.id.music_control_play:
+                if (MusicPlayer.getMusicListSize() == 0) {
                     Toast.makeText(this, "当前播放列表没有歌曲", Toast.LENGTH_SHORT).show();
                     break;
                 }
-                if (!isplaying) {
+                MusicPlayer.playOrPsuse();
+                if (MusicPlayer.isPlaying()) {
                     bottomMusicControlPlay.setImageResource(R.drawable.ic_pause);
-                    musicControlBinder.showPlayOrPause(true);
-
-                    isplaying = true;
-
-                    musicControlBinder.play();
                 } else {
                     bottomMusicControlPlay.setImageResource(R.drawable.ic_play);
-                    musicControlBinder.showPlayOrPause(false);
-
-                    isplaying = false;
-                    musicControlBinder.pause();
                 }
-
                 break;
-            case R.id.music_control__next:
-                musicControlBinder.stop();
-
-                mainActivityPresenterCompl.next(true);
+            case R.id.music_control_next:
+                MusicPlayer.next(true);
                 break;
             case R.id.music_control_cover:
-                MusicListDetailBean musicListDetailBean = mainActivityPresenterCompl.getCurrentMusicDetailBean();
+                MusicListDetailBean musicListDetailBean = MusicPlayer.getMusic();
                 if (musicListDetailBean != null) {
                     musicPlayingFragment = MusicPlayingFragment.newInstance(isplaying, musicListDetailBean.getImageUrl(), musicListDetailBean.getId(), musicListDetailBean.getSongName(), musicListDetailBean.getArtits());
                 }
-
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.addToBackStack("mainfragment")
                         .add(R.id.main_fragment_holder, musicPlayingFragment)
@@ -195,68 +164,64 @@ public class MainActivity extends BaseActivity implements IMainActivity, View.On
     }
 
     public void showPlayingList() {
-        if (mainActivityPresenterCompl.getPlayingLists().size()==0)
-        {
+        if (MusicPlayer.getMusicListSize() == 0) {
             Toast.makeText(this, "当前播放列表没有歌曲", Toast.LENGTH_SHORT).show();
             return;
         }
         musiclistDetailAdapter.clearALlData();
-        musiclistDetailAdapter.adddata(mainActivityPresenterCompl.getPlayingLists());
+        musiclistDetailAdapter.adddata(MusicPlayer.getMusicList());
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
-public void setPlayMode(int mode)
-{
-    mainActivityPresenterCompl.setPlayMode(mode);
-}
-    public void add(MusicListDetailBean musicListDetailBean) {
-        musicControlBinder.stop();
-        mainActivityPresenterCompl.add(musicListDetailBean);
 
-    }
-
-    public void playall(List<MusicListDetailBean> musicListDetailBeans) {
-        mainActivityPresenterCompl.playAll(musicListDetailBeans);
-    }
-
-    public void playSelectInList(int index) {
-        mainActivityPresenterCompl.play(index);
-    }
-
-    public void pre() {
-        mainActivityPresenterCompl.pre(true);
-    }
-
-    public void next() {
-        mainActivityPresenterCompl.next(true);
-    }
-
-
-    public void play() {
-        if (mainActivityPresenterCompl.getListsize() == 0) {
-            Toast.makeText(this, "当前播放列表没有歌曲", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (!isplaying) {
-            bottomMusicControlPlay.setImageResource(R.drawable.ic_pause);
-            if (musicPlayingFragment.isAdded()) {
-                musicPlayingFragment.setMusicPlayButton(!isplaying);
-            }
-            musicControlBinder.showPlayOrPause(!isplaying);
-
-            isplaying = true;
-
-            musicControlBinder.play();
-        } else {
-            bottomMusicControlPlay.setImageResource(R.drawable.ic_play);
-            if (musicPlayingFragment.isAdded()) {
-                musicPlayingFragment.setMusicPlayButton(!isplaying);
-            }
-            musicControlBinder.showPlayOrPause(!isplaying);
-
-            isplaying = false;
-            musicControlBinder.pause();
-        }
-    }
+//    public void add(MusicListDetailBean musicListDetailBean) {
+//        musicControlBinder.stop();
+//        mainActivityPresenterCompl.add(musicListDetailBean);
+//
+//    }
+//
+//    public void playall(List<MusicListDetailBean> musicListDetailBeans) {
+//        mainActivityPresenterCompl.playAll(musicListDetailBeans);
+//    }
+//
+//    public void playSelectInList(int index) {
+//        mainActivityPresenterCompl.play(index);
+//    }
+//
+//    public void pre() {
+//        mainActivityPresenterCompl.pre(true);
+//    }
+//
+//    public void next() {
+//        mainActivityPresenterCompl.next(true);
+//    }
+//
+//
+//    public void play() {
+//        if (mainActivityPresenterCompl.getListsize() == 0) {
+//            Toast.makeText(this, "当前播放列表没有歌曲", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        if (!isplaying) {
+//            bottomMusicControlPlay.setImageResource(R.drawable.ic_pause);
+//            if (musicPlayingFragment.isAdded()) {
+//                musicPlayingFragment.setMusicPlayButton(!isplaying);
+//            }
+//            musicControlBinder.showPlayOrPause(!isplaying);
+//
+//            isplaying = true;
+//
+//            musicControlBinder.play();
+//        } else {
+//            bottomMusicControlPlay.setImageResource(R.drawable.ic_play);
+//            if (musicPlayingFragment.isAdded()) {
+//                musicPlayingFragment.setMusicPlayButton(!isplaying);
+//            }
+//            musicControlBinder.showPlayOrPause(!isplaying);
+//
+//            isplaying = false;
+//            musicControlBinder.pause();
+//        }
+//    }
 
     @Override
     protected void onDestroy() {
@@ -269,7 +234,6 @@ public void setPlayMode(int mode)
     public void showError(String error) {
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
         bottomMusicControlPlay.setImageResource(R.drawable.ic_play);
-        musicControlBinder.showPlayOrPause(false);
 
         isplaying = false;
         if (musicPlayingFragment.isAdded()) {
@@ -278,11 +242,14 @@ public void setPlayMode(int mode)
     }
 
     @Override
+    public void changeMusicUI() {
+        showMusicControl(MusicPlayer.getMusic());
+    }
+
+    @Override
     public void showMusicControl(MusicListDetailBean musicListDetailBean) {
         bottomMusicControlPlay.setImageResource(R.drawable.ic_pause);
-        musicControlBinder.showPlayOrPause(true);
         musiclistDetailAdapter.notifyDataSetChanged();
-        isplaying = true;
         bottomMusicControlSinger.setText(musicListDetailBean.getArtits());
         bottomMusicControlSongName.setText(musicListDetailBean.getSongName());
         Glide.with(BaseApplication.getContext())
@@ -294,20 +261,20 @@ public void setPlayMode(int mode)
                 .crossFade()
                 .fitCenter()
                 .into(bottomMusicControlCoverImage);
-        musicControlBinder.newSongInfo(musicListDetailBean.getImageUrl(), musicListDetailBean.getSongName(), musicListDetailBean.getArtits());
-        if (musicPlayingFragment.isAdded()) {
-            musicPlayingFragment.setView(isplaying, musicListDetailBean.getImageUrl(), musicListDetailBean.getId(), musicListDetailBean.getSongName(), musicListDetailBean.getArtits());
-        }
+//        musicControlBinder.newSongInfo(musicListDetailBean.getImageUrl(), musicListDetailBean.getSongName(), musicListDetailBean.getArtits());
     }
 
     @Override
-    public void play(String songUrl) {
-        if (BuildConfig.DEBUG)
-            Log.d("MainActivity", songUrl);
-        musicControlBinder.newSong(songUrl);
+    public void play() {
+        bottomMusicControlPlay.setImageResource(R.drawable.ic_pause);
 
     }
 
+    @Override
+    public void stop() {
+        bottomMusicControlPlay.setImageResource(R.drawable.ic_play);
+
+    }
 
     public void hidemusicControl(int visibility) {
         musicControlLinearLayout.setVisibility(visibility);
@@ -345,7 +312,7 @@ public void setPlayMode(int mode)
 
     @Override
     public void onItemClick(View view, int position, MusicListDetailBean musicListDetailBean) {
-        playSelectInList(position);
+        MusicPlayer.playByIndex(position);
     }
 
     public class MusicControlLocalReciver extends BroadcastReceiver {
@@ -356,28 +323,24 @@ public void setPlayMode(int mode)
             String action = intent.getAction();
             switch (action) {
                 case Constant.MUSIC_CONTORL_PLAY:
-                    play();
+                    MusicPlayer.playOrPsuse();
                     break;
                 case Constant.MUSIC_CONTORL_PRE:
-
+                    MusicPlayer.previours();
                     break;
                 case Constant.MUSIC_CONTORL_NEXT:
                     if (BuildConfig.DEBUG)
                         Log.d("MusicControlLocalRecive", "MUSIC_CONTORL_NEXT");
                     int statusCode = intent.getIntExtra("statusCode", 0);
                     if (statusCode == 0)
-                        mainActivityPresenterCompl.next(false);
+                        MusicPlayer.next(true);
                     else {
                         showError("缓冲失败");
                         isplaying = false;
                     }
-
                     break;
                 case Constant.MUSIC_CONTORL_STOP:
-                    //                    bottomMusicControlPlay.setImageResource(R.drawable.ic_play);
-                    //                    musicControlBinder.pause();
-                    //                    isplaying = false;
-                    play();
+                    MusicPlayer.playOrPsuse();
                     break;
             }
 

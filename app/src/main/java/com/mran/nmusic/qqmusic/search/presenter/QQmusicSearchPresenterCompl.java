@@ -1,6 +1,6 @@
 package com.mran.nmusic.qqmusic.search.presenter;
 
-import com.mran.nmusic.net.cloudmusic.bean.MusicListDetailBean;
+import com.mran.nmusic.bean.MusicListDetailBean;
 import com.mran.nmusic.net.qqmusic.api.QQmusicApi;
 import com.mran.nmusic.net.qqmusic.jsonadapter.QQmusicSearchJson;
 import com.mran.nmusic.net.qqmusic.util.QQmusicParse;

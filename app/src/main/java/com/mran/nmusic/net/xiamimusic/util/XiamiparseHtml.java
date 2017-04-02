@@ -2,8 +2,8 @@ package com.mran.nmusic.net.xiamimusic.util;
 
 import com.google.gson.Gson;
 import com.mran.nmusic.Constant;
-import com.mran.nmusic.net.cloudmusic.bean.MusicListBean;
-import com.mran.nmusic.net.cloudmusic.bean.MusicListDetailBean;
+import com.mran.nmusic.bean.MusicListBean;
+import com.mran.nmusic.bean.MusicListDetailBean;
 import com.mran.nmusic.net.xiamimusic.jsonadapter.XiamiMusiclistDetailJson;
 import com.mran.nmusic.net.xiamimusic.jsonadapter.XiamiSeachJson;
 

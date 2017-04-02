@@ -21,7 +21,7 @@ public class MusicControlBroadReciver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         switch (action) {
-            case Constant.MUSIC_CONTORL_PLAY:
+            case Constant.MUSIC_NOTIFICATION_CONTORL_PLAY:
                 if (BuildConfig.DEBUG)
                     Log.d("MusicControlBroadRecive", "play");
                 Intent stopIntent = new Intent(Constant.MUSIC_CONTORL_STOP);
@@ -33,7 +33,7 @@ public class MusicControlBroadReciver extends BroadcastReceiver {
                     Log.d("MusicControlBroadRecive", "pre");
 
                 break;
-            case Constant.MUSIC_CONTORL_NEXT:
+            case Constant.MUSIC_NOTIFICATION_CONTORL_NEXT:
                 if (BuildConfig.DEBUG)
                     Log.d("MusicControlBroadRecive", "next");
                 Intent nextIntent = new Intent(Constant.MUSIC_CONTORL_NEXT);

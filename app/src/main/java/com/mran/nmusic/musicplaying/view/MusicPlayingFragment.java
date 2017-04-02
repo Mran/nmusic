@@ -18,6 +18,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mran.nmusic.BaseApplication;
 import com.mran.nmusic.BaseFragment;
 import com.mran.nmusic.Constant;
+import com.mran.nmusic.service.MusicPlayer;
 import com.mran.nmusic.R;
 import com.mran.nmusic.mainactivity.MainActivity;
 
@@ -28,7 +29,7 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
  */
 
 public class MusicPlayingFragment extends BaseFragment implements View.OnTouchListener, View.OnClickListener {
-    boolean isplaying = false;
+
     private View view;
     private ImageView musicCoverImage;
     private ImageView backGroundImage;
@@ -78,7 +79,7 @@ public class MusicPlayingFragment extends BaseFragment implements View.OnTouchLi
         musicid = getArguments().getString("musicid");
         musicTitle = getArguments().getString("musicTitle");
         musicSinger = getArguments().getString("musicSinger");
-        isplaying = getArguments().getBoolean("isplaying");
+
     }
 
     private void bindview() {
@@ -95,7 +96,7 @@ public class MusicPlayingFragment extends BaseFragment implements View.OnTouchLi
     }
 
     private void initview() {
-        setView(isplaying, musicCoverurl, musicid, musicTitle, musicSinger);
+        setView(musicCoverurl, musicid, musicTitle, musicSinger);
         toolbar.setNavigationIcon(R.drawable.back_material);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,19 +121,20 @@ public class MusicPlayingFragment extends BaseFragment implements View.OnTouchLi
         }
     }
 
-    public void setView(boolean isplaying, String musicCoverurl, String musicId, String musicTitle, String singer) {
+    @Override
+    public void changeMusicUI() {
+
+        setView(MusicPlayer.getMusicImgUrl(), MusicPlayer.getMusicId(), MusicPlayer.getMusicName(), MusicPlayer.getMusicSinger());
+    }
+
+    public void setView(String musicCoverurl, String musicId, String musicTitle, String singer) {
         this.musicCoverurl = musicCoverurl;
         this.musicid = musicId;
         this.musicTitle = musicTitle;
         this.musicSinger = singer;
-
+        setMusicPlayButton(MusicPlayer.isPlaying());
         toolbar.setTitle(musicTitle);
         toolbar.setSubtitle(musicSinger);
-        if (isplaying) {
-            musicPlayButton.setImageResource(R.drawable.ic_pause_b);
-        } else {
-            musicPlayButton.setImageResource(R.drawable.ic_play_b);
-        }
         setPlayMode();
         Glide.with(BaseApplication.getContext())
                 .load(musicCoverurl)
@@ -154,8 +156,18 @@ public class MusicPlayingFragment extends BaseFragment implements View.OnTouchLi
                 .into(backGroundImage);
     }
 
+    @Override
+    public void play() {
+        musicPlayButton.setImageResource(R.drawable.ic_pause_b);
+    }
+
+    @Override
+    public void stop() {
+        musicPlayButton.setImageResource(R.drawable.ic_play_b);
+    }
+
     private void setPlayMode() {
-        switch (playMode) {
+        switch (MusicPlayer.getPlayMode()) {
             case Constant.ALLREPEAT:
                 playModeButton.setImageResource(R.drawable.ic_repeat);
                 break;
@@ -180,28 +192,25 @@ public class MusicPlayingFragment extends BaseFragment implements View.OnTouchLi
         int id = v.getId();
         switch (id) {
             case R.id.music_playing_control_pre:
-                mainActivity.pre();
+                MusicPlayer.previours();
                 break;
             case R.id.music_playing_control_play:
-                mainActivity.play();
-                if (!isplaying) {
+                MusicPlayer.playOrPsuse();
+                if (MusicPlayer.isPlaying()) {
                     musicPlayButton.setImageResource(R.drawable.ic_pause_b);
-                    isplaying = true;
                 } else {
                     musicPlayButton.setImageResource(R.drawable.ic_play_b);
-                    isplaying = false;
                 }
                 break;
             case R.id.music_playing_control_next:
-                mainActivity.next();
+                MusicPlayer.next(true);
                 break;
             case R.id.music_playing_control_playmode:
-                if (playMode == 5)
-                    playMode = Constant.ONEREPEAT;
+                if (MusicPlayer.getPlayMode() == Constant.SHUFFLE)
+                    MusicPlayer.setPlayMode(Constant.ONEREPEAT);
                 else
-                    playMode++;
+                    MusicPlayer.setPlayMode(MusicPlayer.getPlayMode() + 1);
                 setPlayMode();
-                mainActivity.setPlayMode(playMode);
                 break;
             case R.id.music_playing_control_playinglist:
                 mainActivity.showPlayingList();

@@ -2,7 +2,7 @@ package com.mran.nmusic.xiami.musiclistdetail.presenter;
 
 import android.content.Context;
 
-import com.mran.nmusic.net.cloudmusic.bean.MusicListDetailBean;
+import com.mran.nmusic.bean.MusicListDetailBean;
 import com.mran.nmusic.net.xiamimusic.api.XiamiMusicApi;
 import com.mran.nmusic.net.xiamimusic.jsonadapter.XiamiMusiclistDetailJson;
 import com.mran.nmusic.net.xiamimusic.util.XiamiparseHtml;

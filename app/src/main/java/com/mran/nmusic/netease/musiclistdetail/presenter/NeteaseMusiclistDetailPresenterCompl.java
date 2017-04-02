@@ -3,7 +3,7 @@ package com.mran.nmusic.netease.musiclistdetail.presenter;
 import android.content.Context;
 
 import com.mran.nmusic.net.cloudmusic.api.CloudMusicApi;
-import com.mran.nmusic.net.cloudmusic.bean.MusicListDetailBean;
+import com.mran.nmusic.bean.MusicListDetailBean;
 import com.mran.nmusic.net.cloudmusic.util.CloudMusicParse;
 import com.mran.nmusic.netease.musiclistdetail.view.INeteaseMusicListDetailFragment;
 

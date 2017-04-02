@@ -1,4 +1,4 @@
-package com.mran.nmusic.netease.musiclist.adapter;
+package com.mran.nmusic.adapter;
 
 import android.content.Context;
 

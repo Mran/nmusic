@@ -24,16 +24,18 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mran.nmusic.BaseApplication;
 import com.mran.nmusic.BaseFragment;
 import com.mran.nmusic.BuildConfig;
+import com.mran.nmusic.service.MusicPlayer;
 import com.mran.nmusic.R;
+import com.mran.nmusic.adapter.MusiclistDetailAdapter;
+import com.mran.nmusic.bean.MusicListDetailBean;
 import com.mran.nmusic.mainactivity.MainActivity;
-import com.mran.nmusic.net.cloudmusic.bean.MusicListDetailBean;
-import com.mran.nmusic.netease.musiclistdetail.adapter.MusiclistDetailAdapter;
 import com.mran.nmusic.netease.musiclistdetail.presenter.NeteaseMusiclistDetailPresenterCompl;
 import com.mran.nmusic.netease.search.view.MusicSearchRecycleviewItemDecoration;
 
 import java.util.List;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
+
 
 /**
  * Created by 张孟尧 on 2016/10/4.
@@ -118,7 +120,7 @@ public class NeteaseMusicListDetailFragment extends BaseFragment implements INet
         collapsingToolbarLayout.setExpandedTitleColor(ContextCompat.getColor(BaseApplication.getContext(), R.color.main_tab_color));
         musiclistDetailAdapter = new MusiclistDetailAdapter(BaseApplication.getContext());
         listRecyclerView.setLayoutManager(new LinearLayoutManager(BaseApplication.getContext()));
-        listRecyclerView.addItemDecoration(new MusicSearchRecycleviewItemDecoration(BaseApplication.getContext(),0.1));
+        listRecyclerView.addItemDecoration(new MusicSearchRecycleviewItemDecoration(BaseApplication.getContext(), 0.1));
 
         listRecyclerView.setAdapter(musiclistDetailAdapter);
 
@@ -153,19 +155,11 @@ public class NeteaseMusicListDetailFragment extends BaseFragment implements INet
 
 
     @Override
-    public void onItemClick(View view, int position, MusicListDetailBean musicListDetailBean) {
-
-        mainActivity.add(musicListDetailBean);
-
-    }
-
-
-    @Override
     public void onClick(View v) {
         int id = v.getId();
         switch (id) {
             case R.id.musiclist_detail_fragment_playall_button:
-                mainActivity.playall(neteaseMusiclistDetailPresenterCompl.getMlistDetailBeen());
+                MusicPlayer.addMusicList(neteaseMusiclistDetailPresenterCompl.getMlistDetailBeen());
                 break;
             default:
                 break;
@@ -173,6 +167,7 @@ public class NeteaseMusicListDetailFragment extends BaseFragment implements INet
 
         }
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -185,5 +180,10 @@ public class NeteaseMusicListDetailFragment extends BaseFragment implements INet
         super.onDestroy();
         if (BuildConfig.DEBUG)
             Log.d("NeteaseMusicListDetailF", "onDestroy");
+    }
+
+    @Override
+    public void onItemClick(View view, int position, MusicListDetailBean musicListDetailBean) {
+        MusicPlayer.addMusic(musicListDetailBean);
     }
 }

@@ -65,7 +65,7 @@ public class MainFragment extends BaseFragment implements Toolbar.OnMenuItemClic
         exploreFragment = new ExploreFragment();
         mineFragment = new MineFragment();
         fragmentList = new ArrayList<>();
-        fragmentList.add(mineFragment);
+//        fragmentList.add(mineFragment);
         fragmentList.add(exploreFragment);
 
         mainViewpagerAdapter = new MainViewpagerAdapter(getChildFragmentManager(), fragmentList);

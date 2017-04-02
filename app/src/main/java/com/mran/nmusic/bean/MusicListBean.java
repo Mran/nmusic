@@ -1,4 +1,4 @@
-package com.mran.nmusic.net.cloudmusic.bean;
+package com.mran.nmusic.bean;
 
 /**
  * Created by 张孟尧 on 2016/8/15.

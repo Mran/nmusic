@@ -1,6 +1,6 @@
 package com.mran.nmusic.netease.search.view;
 
-import com.mran.nmusic.net.cloudmusic.bean.MusicListDetailBean;
+import com.mran.nmusic.bean.MusicListDetailBean;
 
 import java.util.List;
 

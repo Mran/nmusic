@@ -8,15 +8,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mran.nmusic.BaseApplication;
 import com.mran.nmusic.BaseFragment;
 import com.mran.nmusic.BuildConfig;
 import com.mran.nmusic.R;
-import com.mran.nmusic.net.cloudmusic.bean.MusicListBean;
-import com.mran.nmusic.netease.musiclist.adapter.MusiclistAdapter;
+import com.mran.nmusic.bean.MusicListBean;
+import com.mran.nmusic.adapter.MusiclistAdapter;
 import com.mran.nmusic.netease.musiclist.presenter.NeteasePresenterCompl;
 import com.mran.nmusic.netease.musiclistdetail.view.NeteaseMusicListDetailFragment;
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;

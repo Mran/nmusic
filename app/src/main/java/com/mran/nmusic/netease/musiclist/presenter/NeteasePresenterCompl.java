@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.mran.nmusic.Constant;
 import com.mran.nmusic.net.cloudmusic.api.CloudMusicApi;
-import com.mran.nmusic.net.cloudmusic.bean.MusicListBean;
+import com.mran.nmusic.bean.MusicListBean;
 import com.mran.nmusic.net.cloudmusic.util.CloudMusicParse;
 import com.mran.nmusic.netease.musiclist.view.IMusiclistFragment;
 

@@ -20,10 +20,11 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.mran.nmusic.BaseApplication;
 import com.mran.nmusic.BaseFragment;
+import com.mran.nmusic.service.MusicPlayer;
 import com.mran.nmusic.R;
+import com.mran.nmusic.adapter.MusiclistDetailAdapter;
+import com.mran.nmusic.bean.MusicListDetailBean;
 import com.mran.nmusic.mainactivity.MainActivity;
-import com.mran.nmusic.net.cloudmusic.bean.MusicListDetailBean;
-import com.mran.nmusic.netease.musiclistdetail.adapter.MusiclistDetailAdapter;
 import com.mran.nmusic.netease.search.view.MusicSearchRecycleviewItemDecoration;
 import com.mran.nmusic.xiami.musiclistdetail.presenter.XiamilistDetailPresenterCompl;
 
@@ -35,8 +36,7 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
  * Created by 张孟尧 on 2016/10/4.
  */
 
-public class XiamiListDetailFragment extends BaseFragment implements IXiamiListDetailFragment, View.OnClickListener, MusiclistDetailAdapter.OnRecyclerItemClickedListener
-{
+public class XiamiListDetailFragment extends BaseFragment implements IXiamiListDetailFragment, View.OnClickListener, MusiclistDetailAdapter.OnRecyclerItemClickedListener {
     private View view;
     private Toolbar toolbar;
     private RecyclerView listRecyclerView;
@@ -90,7 +90,8 @@ public class XiamiListDetailFragment extends BaseFragment implements IXiamiListD
         listRecyclerView = (RecyclerView) view.findViewById(R.id.musiclist_detail_fragment_recycleview);
         listCoverImageView = (ImageView) view.findViewById(R.id.musiclist_detail_fragment_music_cover);
         listCoverBackRoundImageView = (ImageView) view.findViewById(R.id.musiclist_detail_fragment_music_cover_backround);
-        appBarLayout = (AppBarLayout) view.findViewById(R.id.musiclist_detail_fragment_appbar);        playallButton = (Button) view.findViewById(R.id.musiclist_detail_fragment_playall_button);
+        appBarLayout = (AppBarLayout) view.findViewById(R.id.musiclist_detail_fragment_appbar);
+        playallButton = (Button) view.findViewById(R.id.musiclist_detail_fragment_playall_button);
 
     }
 
@@ -115,7 +116,7 @@ public class XiamiListDetailFragment extends BaseFragment implements IXiamiListD
         musiclistDetailAdapter.setOnRecyclerItemClickListener(this);
         listRecyclerView.setLayoutManager(new LinearLayoutManager(BaseApplication.getContext()));
         listRecyclerView.setAdapter(musiclistDetailAdapter);
-        listRecyclerView.addItemDecoration(new MusicSearchRecycleviewItemDecoration(BaseApplication.getContext(),0.1));
+        listRecyclerView.addItemDecoration(new MusicSearchRecycleviewItemDecoration(BaseApplication.getContext(), 0.1));
 
         listRecyclerView.setNestedScrollingEnabled(false);
         xiamilistDetailPresenterCompl.getMusicListDetail(listid);
@@ -132,7 +133,8 @@ public class XiamiListDetailFragment extends BaseFragment implements IXiamiListD
 
     @Override
     public void showResult(List<MusicListDetailBean> listDetailBeanList) {
-        musiclistDetailAdapter.adddata(listDetailBeanList);        playallButton.setClickable(true);
+        musiclistDetailAdapter.adddata(listDetailBeanList);
+        playallButton.setClickable(true);
 
     }
 
@@ -146,7 +148,7 @@ public class XiamiListDetailFragment extends BaseFragment implements IXiamiListD
         int id = v.getId();
         switch (id) {
             case R.id.musiclist_detail_fragment_playall_button:
-                mainActivity.playall(xiamilistDetailPresenterCompl.getMlistDetailBeen());
+                MusicPlayer.addMusicList(xiamilistDetailPresenterCompl.getMlistDetailBeen());
                 break;
             default:
                 break;
@@ -154,10 +156,10 @@ public class XiamiListDetailFragment extends BaseFragment implements IXiamiListD
 
         }
     }
+
     @Override
     public void onItemClick(View view, int position, MusicListDetailBean musicListDetailBean) {
-        mainActivity.add(musicListDetailBean);
-
+        MusicPlayer.addMusic(musicListDetailBean);
     }
 
     @Override
