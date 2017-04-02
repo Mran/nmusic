@@ -17,12 +17,12 @@
 计划以后继续完善,向网易云音乐的功能靠近.
 
 ### 使用到的开源项目有
-1.jsoup1.9.2
-2.retrofit2.0
-3.gson2.7
-4.rxjava
-5.glide
-6.[PullLoadMoreRecyclerView](https://github.com/WuXiaolong/PullLoadMoreRecyclerView)
+1. jsoup1.9.2
+2. retrofit2.0
+3. gson2.7
+4. rxjava
+5. glide
+6. [PullLoadMoreRecyclerView](https://github.com/WuXiaolong/PullLoadMoreRecyclerView)
 
 ### 开源协议
 [GPL](http://www.gnu.org/licenses/gpl.html)
