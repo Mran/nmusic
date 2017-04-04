@@ -388,7 +388,8 @@ public class MusicPlayService extends Service implements MediaPlayer.OnPreparedL
 
     //把正在播放列表里的歌曲状态变成未播放状态
     private void setListStateToNOPlaying(int index) {
-        detailBeanList.get(index).setPlaying(false);
+        if (detailBeanList.size() != 0)
+            detailBeanList.get(index).setPlaying(false);
     }
 
     //播放网易云音乐
@@ -480,7 +481,7 @@ public class MusicPlayService extends Service implements MediaPlayer.OnPreparedL
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
 
-      MusicPlayer.next(false);
+        MusicPlayer.next(false);
     }
 
     @Override

@@ -17,12 +17,11 @@ import java.util.List;
  */
 public class MainViewpagerAdapter extends FragmentStatePagerAdapter {
     private List<Fragment> mscheduleTabblefragmentList;
-    private FragmentManager fragmentManager;
 
     public MainViewpagerAdapter(FragmentManager fm, List<Fragment> tabblefragmentList) {
         super(fm);
         mscheduleTabblefragmentList = tabblefragmentList;
-        fragmentManager = fm;
+
     }
 
     @Override
