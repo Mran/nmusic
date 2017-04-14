@@ -1,9 +1,10 @@
-package com.mran.nmusic.xiami.musiclistdetail.view;
+package com.mran.nmusic.musiclistdetail.view;
+
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -18,49 +19,61 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mran.nmusic.BaseApplication;
-import com.mran.nmusic.BaseFragment;
-import com.mran.nmusic.service.MusicPlayer;
+import com.mran.nmusic.Constant;
 import com.mran.nmusic.R;
 import com.mran.nmusic.adapter.MusiclistDetailAdapter;
 import com.mran.nmusic.bean.MusicListDetailBean;
-import com.mran.nmusic.mainactivity.MainActivity;
+import com.mran.nmusic.musiclistdetail.presenter.MusiclistDetailPresenterCompls;
 import com.mran.nmusic.netease.search.view.MusicSearchRecycleviewItemDecoration;
-import com.mran.nmusic.xiami.musiclistdetail.presenter.XiamilistDetailPresenterCompl;
+import com.mran.nmusic.service.MusicPlayer;
 
 import java.util.List;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
 /**
- * Created by 张孟尧 on 2016/10/4.
+ * Created by M on 2017/4/9.
  */
 
-public class XiamiListDetailFragment extends BaseFragment implements IXiamiListDetailFragment, View.OnClickListener, MusiclistDetailAdapter.OnRecyclerItemClickedListener {
+public class MusicListDetailFragment extends Fragment implements IMusicListDetailFragment, MusiclistDetailAdapter.OnRecyclerItemClickedListener, View.OnClickListener {
     private View view;
     private Toolbar toolbar;
     private RecyclerView listRecyclerView;
     private ImageView listCoverImageView;
     private ImageView listCoverBackRoundImageView;
-
+    private Button playallButton;
     private CollapsingToolbarLayout collapsingToolbarLayout;
-    private AppBarLayout appBarLayout;
     private MusiclistDetailAdapter musiclistDetailAdapter;
-    private XiamilistDetailPresenterCompl xiamilistDetailPresenterCompl;
+    private MusiclistDetailPresenterCompls mMusiclistDetailPresenterCompls;
+
     private String listcoverurl;
     private String listid;
     private String listTitle;
-    private MainActivity mainActivity;
-    private Button playallButton;
+    private int tag;
 
-    public static XiamiListDetailFragment newInstance(String listcoverurl, String listid, String listTitle) {
-        XiamiListDetailFragment xiamiListDetailFragment = new XiamiListDetailFragment();
+    public static MusicListDetailFragment newInstance(String listcoverurl, String listid, String listTitle, int tag) {
+        MusicListDetailFragment musicListDetailFragment = new MusicListDetailFragment();
         Bundle bundle = new Bundle();
         bundle.putString("listcoverurl", listcoverurl);
         bundle.putString("listid", listid);
         bundle.putString("listTitle", listTitle);
-        xiamiListDetailFragment.setArguments(bundle);
-        return xiamiListDetailFragment;
+        bundle.putInt("tag", tag);
+
+        musicListDetailFragment.setArguments(bundle);
+        return musicListDetailFragment;
+
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        listcoverurl = getArguments().getString("listcoverurl");
+        listid = getArguments().getString("listid");
+        listTitle = getArguments().getString("listTitle");
+        tag = getArguments().getInt("tag");
 
     }
 
@@ -68,20 +81,18 @@ public class XiamiListDetailFragment extends BaseFragment implements IXiamiListD
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.musiclist_detail_fragment, container, false);
+        mMusiclistDetailPresenterCompls = new MusiclistDetailPresenterCompls(BaseApplication.getContext(), this);
         bindView();
         initView();
-        mainActivity = (MainActivity) getActivity();
-
         return view;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        xiamilistDetailPresenterCompl = new XiamilistDetailPresenterCompl(BaseApplication.getContext(), this);
-        listcoverurl = getArguments().getString("listcoverurl");
-        listid = getArguments().getString("listid");
-        listTitle = getArguments().getString("listTitle");
+    public void setParams(String listcoverurl, String listid, String listTitle, int tag) {
+        this.listcoverurl = listcoverurl;
+        this.listid = listid;
+        this.listTitle = listTitle;
+        this.tag = tag;
+
     }
 
     void bindView() {
@@ -90,9 +101,7 @@ public class XiamiListDetailFragment extends BaseFragment implements IXiamiListD
         listRecyclerView = (RecyclerView) view.findViewById(R.id.musiclist_detail_fragment_recycleview);
         listCoverImageView = (ImageView) view.findViewById(R.id.musiclist_detail_fragment_music_cover);
         listCoverBackRoundImageView = (ImageView) view.findViewById(R.id.musiclist_detail_fragment_music_cover_backround);
-        appBarLayout = (AppBarLayout) view.findViewById(R.id.musiclist_detail_fragment_appbar);
         playallButton = (Button) view.findViewById(R.id.musiclist_detail_fragment_playall_button);
-
     }
 
     void initView() {
@@ -113,21 +122,40 @@ public class XiamiListDetailFragment extends BaseFragment implements IXiamiListD
         toolbar.setTitle(listTitle);
         collapsingToolbarLayout.setExpandedTitleColor(ContextCompat.getColor(BaseApplication.getContext(), R.color.main_tab_color));
         musiclistDetailAdapter = new MusiclistDetailAdapter(BaseApplication.getContext());
-        musiclistDetailAdapter.setOnRecyclerItemClickListener(this);
         listRecyclerView.setLayoutManager(new LinearLayoutManager(BaseApplication.getContext()));
-        listRecyclerView.setAdapter(musiclistDetailAdapter);
         listRecyclerView.addItemDecoration(new MusicSearchRecycleviewItemDecoration(BaseApplication.getContext(), 0.1));
 
+        listRecyclerView.setAdapter(musiclistDetailAdapter);
+
         listRecyclerView.setNestedScrollingEnabled(false);
-        xiamilistDetailPresenterCompl.getMusicListDetail(listid);
-        //        Picasso.with(BaseApplication.getContext()).load(listcoverurl).fit().into(listCoverImageView);
-        Glide.with(BaseApplication.getContext()).load(listcoverurl).fitCenter().crossFade().into(listCoverImageView);
+        musiclistDetailAdapter.setOnRecyclerItemClickListener(this);
+        Glide.with(BaseApplication.getContext()).load(listcoverurl)
+                .fitCenter()
+                .crossFade()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(listCoverImageView);
         Glide.with(BaseApplication.getContext())
                 .load(listcoverurl)
                 .fitCenter()
-                .crossFade()
+//                .listener(new CrossFadeListener())
+                .crossFade(300)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .bitmapTransform(new BlurTransformation(BaseApplication.getContext()))
                 .into(listCoverBackRoundImageView);
+        switch (tag) {
+            case Constant.NETEASETAG:
+                mMusiclistDetailPresenterCompls.getCloudMusicListDetail(listid);
+                break;
+            case Constant.QQTAG:
+                mMusiclistDetailPresenterCompls.getQQMusicListDetail(listid);
+                break;
+            case Constant.XIAMITAG:
+                mMusiclistDetailPresenterCompls.getXiaMiMusicListDetail(listid);
+                break;
+            default:
+                break;
+
+        }
 
     }
 
@@ -135,8 +163,8 @@ public class XiamiListDetailFragment extends BaseFragment implements IXiamiListD
     public void showResult(List<MusicListDetailBean> listDetailBeanList) {
         musiclistDetailAdapter.adddata(listDetailBeanList);
         playallButton.setClickable(true);
-
     }
+
 
     @Override
     public void showError(String error) {
@@ -148,7 +176,7 @@ public class XiamiListDetailFragment extends BaseFragment implements IXiamiListD
         int id = v.getId();
         switch (id) {
             case R.id.musiclist_detail_fragment_playall_button:
-                MusicPlayer.addMusicList(xiamilistDetailPresenterCompl.getMlistDetailBeen());
+                MusicPlayer.addMusicList(mMusiclistDetailPresenterCompls.getMlistDetailBeen());
                 break;
             default:
                 break;
@@ -160,11 +188,5 @@ public class XiamiListDetailFragment extends BaseFragment implements IXiamiListD
     @Override
     public void onItemClick(View view, int position, MusicListDetailBean musicListDetailBean) {
         MusicPlayer.addMusic(musicListDetailBean);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
     }
 }

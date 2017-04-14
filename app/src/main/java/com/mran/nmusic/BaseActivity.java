@@ -37,6 +37,13 @@ public class BaseActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mBaseBroadReciver);
+
+    }
+
     class BaseBroadReciver extends BroadcastReceiver {
         String action;
 

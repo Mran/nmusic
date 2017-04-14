@@ -9,5 +9,6 @@
     <color name="main_tab_select_color">#d2d2d2</color>
 <color name="playing">#9f0b15</color>
     <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
 
 </resources>

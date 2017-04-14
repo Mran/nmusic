@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.transition.Explode;
+import android.transition.Fade;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,12 +14,14 @@ import android.widget.Toast;
 
 import com.mran.nmusic.BaseFragment;
 import com.mran.nmusic.BuildConfig;
+import com.mran.nmusic.Constant;
+import com.mran.nmusic.musiclistdetail.view.DetailsTransition;
 import com.mran.nmusic.R;
-import com.mran.nmusic.bean.MusicListBean;
 import com.mran.nmusic.adapter.MusiclistAdapter;
+import com.mran.nmusic.bean.MusicListBean;
+import com.mran.nmusic.musiclistdetail.view.MusicListDetailFragment;
 import com.mran.nmusic.netease.musiclist.view.IMusiclistFragment;
 import com.mran.nmusic.xiami.musiclist.presenter.XiamiPresenterCompl;
-import com.mran.nmusic.xiami.musiclistdetail.view.XiamiListDetailFragment;
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;
 
 import java.util.List;
@@ -98,16 +102,30 @@ public class XiamiFragment extends BaseFragment implements IMusiclistFragment, P
 
     }
 
+
+
     @Override
     public void onItemClick(View view, int position, MusicListBean musicListBean) {
-        XiamiListDetailFragment xiamiListDetailFragment = XiamiListDetailFragment.newInstance(musicListBean.getCoverImageUrl(), musicListBean.getListId(), musicListBean.getTitle());
+
+
+        MusicListDetailFragment musicListDetailFragment = MusicListDetailFragment.newInstance(musicListBean.getCoverImageUrl(), musicListBean.getListId(), musicListBean.getTitle(), Constant.XIAMITAG);
         FragmentManager fragmentManager = getParentFragment().getParentFragment().getFragmentManager();
-
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.addToBackStack("mainfragment").add(R.id.main_fragment_holder, xiamiListDetailFragment).hide(fragmentManager.getFragments().get(0)).commit();
+
+        musicListDetailFragment.setSharedElementEnterTransition(new DetailsTransition());
+        setEnterTransition(new Fade());
+        setExitTransition(new Explode());
+        musicListDetailFragment.setSharedElementReturnTransition(new DetailsTransition());
 
 
+        transaction.addToBackStack("mainfragment")
+                .setCustomAnimations(R.anim.list_deatil_in,R.anim.list_detail_out,R.anim.list_deatil_in,R.anim.list_detail_out)
+                .add(R.id.main_fragment_holder, musicListDetailFragment)
+//                .hide(fragmentManager.getFragments().get(0))
+                .addSharedElement(view.findViewById(R.id.explore_muisclistcover_item_cover), "list_cover_img")
+                .commit();
     }
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

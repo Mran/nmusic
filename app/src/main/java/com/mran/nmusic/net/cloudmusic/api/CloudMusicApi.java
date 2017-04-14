@@ -9,6 +9,11 @@ import com.mran.nmusic.net.cloudmusic.api.Interfacelmpl.CloudMusicMusicUrl;
 import com.mran.nmusic.net.cloudmusic.api.Interfacelmpl.CloudMusicRecommendMusciList;
 import com.mran.nmusic.net.cloudmusic.api.Interfacelmpl.SearchMusic;
 
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.util.ArrayList;
+import java.util.List;
+
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
@@ -19,11 +24,6 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
-
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by 张孟尧 on 2016/8/14.
@@ -94,7 +94,7 @@ public class CloudMusicApi {
                     .baseUrl(Constant.cloudMusicBaseUrl)
                     .client(client)
                     .addCallAdapterFactory(rxJavaCallAdapterFactory)
-                    .addConverterFactory(scalarsConverterFactory)
+                    .addConverterFactory(gsonConverterFactory)
                     .build();
             cloudMusicMusicListDetail = retrofit.create(CloudMusicMusicListDetail.class);
         }

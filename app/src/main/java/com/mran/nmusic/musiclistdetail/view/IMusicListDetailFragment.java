@@ -1,14 +1,15 @@
-package com.mran.nmusic.qqmusic.musiclistdetail.view;
+package com.mran.nmusic.musiclistdetail.view;
 
 import com.mran.nmusic.bean.MusicListDetailBean;
 
 import java.util.List;
 
 /**
- * Created by 张孟尧 on 2016/10/8.
+ * Created by M on 2017/4/10.
  */
 
-public interface IQQMusicListDetailFragment {
+public interface IMusicListDetailFragment {
     void showResult(List<MusicListDetailBean> listDetailBeanList);
+
     void showError(String error);
 }

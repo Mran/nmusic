@@ -37,6 +37,12 @@ public class BaseFragment extends Fragment {
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unregisterReceiver(mBaseBroadReciver);
+    }
+
     class BaseBroadReciver extends BroadcastReceiver {
         String action;
 

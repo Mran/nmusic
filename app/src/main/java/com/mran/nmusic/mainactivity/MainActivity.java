@@ -16,6 +16,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,7 +31,6 @@ import com.mran.nmusic.BaseActivity;
 import com.mran.nmusic.BaseApplication;
 import com.mran.nmusic.BuildConfig;
 import com.mran.nmusic.Constant;
-import com.mran.nmusic.service.MusicPlayer;
 import com.mran.nmusic.R;
 import com.mran.nmusic.adapter.MusiclistDetailAdapter;
 import com.mran.nmusic.bean.MusicListDetailBean;
@@ -37,7 +38,9 @@ import com.mran.nmusic.fragmentutil.FragmentControl;
 import com.mran.nmusic.main.view.MainFragment;
 import com.mran.nmusic.mainactivity.presenter.MainActivityPresenterCompl;
 import com.mran.nmusic.mainactivity.view.IMainActivity;
+import com.mran.nmusic.musiclistdetail.view.DetailsTransition;
 import com.mran.nmusic.musicplaying.view.MusicPlayingFragment;
+import com.mran.nmusic.service.MusicPlayer;
 
 public class MainActivity extends BaseActivity implements IMainActivity, View.OnClickListener, View.OnTouchListener, MusiclistDetailAdapter.OnRecyclerItemClickedListener {
     private MainActivityPresenterCompl mainActivityPresenterCompl;
@@ -82,6 +85,7 @@ public class MainActivity extends BaseActivity implements IMainActivity, View.On
     void bindView() {
         MainFragment mainFragment = new MainFragment();
         bottomMusicControlCoverImage = (ImageView) findViewById(R.id.music_control_cover);
+        bottomMusicControlCoverImage.setTransitionName("bottom_music_playing_cover");
         bottomMusicControlPre = (ImageButton) findViewById(R.id.music_control__pre);
         bottomMusicControlPlay = (ImageButton) findViewById(R.id.music_control_play);
         bottomMusicControlNext = (ImageButton) findViewById(R.id.music_control_next);
@@ -153,8 +157,13 @@ public class MainActivity extends BaseActivity implements IMainActivity, View.On
                     musicPlayingFragment = MusicPlayingFragment.newInstance(isplaying, musicListDetailBean.getImageUrl(), musicListDetailBean.getId(), musicListDetailBean.getSongName(), musicListDetailBean.getArtits());
                 }
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                musicPlayingFragment.setSharedElementEnterTransition(new DetailsTransition());
+                musicPlayingFragment.setSharedElementReturnTransition(new DetailsTransition());
+
                 fragmentTransaction.addToBackStack("mainfragment")
+                        .setCustomAnimations(R.anim.fra_in, R.anim.fra_out, R.anim.fra_in, R.anim.fra_out)
                         .add(R.id.main_fragment_holder, musicPlayingFragment)
+                        .addSharedElement(bottomMusicControlCoverImage,"playing_music_playing_cover")
                         .commit();
                 hidemusicControl(View.INVISIBLE);
                 break;
@@ -164,6 +173,7 @@ public class MainActivity extends BaseActivity implements IMainActivity, View.On
     }
 
     public void showPlayingList() {
+        
         if (MusicPlayer.getMusicListSize() == 0) {
             Toast.makeText(this, "当前播放列表没有歌曲", Toast.LENGTH_SHORT).show();
             return;
@@ -276,12 +286,31 @@ public class MainActivity extends BaseActivity implements IMainActivity, View.On
 
     }
 
-    public void hidemusicControl(int visibility) {
-        musicControlLinearLayout.setVisibility(visibility);
-        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+    //隐藏底部音乐控制条
+    public void hidemusicControl(int visible) {
+        if (musicControlLinearLayout.getVisibility() != View.INVISIBLE && visible == View.INVISIBLE) {
+            TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, 0, musicControlLinearLayout.getHeight());
+            translateAnimation.setDuration(100);
+            musicControlLinearLayout.setClickable(false);
+            translateAnimation.setInterpolator(new AccelerateInterpolator(0.8f));
+            musicControlLinearLayout.startAnimation(translateAnimation);
+            musicControlLinearLayout.setVisibility(View.INVISIBLE);
+        } else if (musicControlLinearLayout.getVisibility() == View.INVISIBLE && visible == View.VISIBLE) {
+            musicControlLinearLayout.setClickable(true);
+            TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, musicControlLinearLayout.getHeight(), 0);
+            translateAnimation.setDuration(100);
+            translateAnimation.setInterpolator(new AccelerateInterpolator(0.8f));
+            musicControlLinearLayout.startAnimation(translateAnimation);
+            musicControlLinearLayout.setVisibility(View.VISIBLE);
+        }
+        hideBottomSheet();
+
+    }
+
+    public void hideBottomSheet() {
+        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_SETTLING) {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
-
     }
 
     @Override

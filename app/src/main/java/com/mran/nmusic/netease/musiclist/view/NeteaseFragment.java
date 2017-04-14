@@ -12,11 +12,13 @@ import android.widget.Toast;
 
 import com.mran.nmusic.BaseFragment;
 import com.mran.nmusic.BuildConfig;
+import com.mran.nmusic.Constant;
 import com.mran.nmusic.R;
-import com.mran.nmusic.bean.MusicListBean;
 import com.mran.nmusic.adapter.MusiclistAdapter;
+import com.mran.nmusic.bean.MusicListBean;
+import com.mran.nmusic.musiclistdetail.view.DetailsTransition;
+import com.mran.nmusic.musiclistdetail.view.MusicListDetailFragment;
 import com.mran.nmusic.netease.musiclist.presenter.NeteasePresenterCompl;
-import com.mran.nmusic.netease.musiclistdetail.view.NeteaseMusicListDetailFragment;
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;
 
 import java.util.List;
@@ -107,11 +109,25 @@ public class NeteaseFragment extends BaseFragment implements IMusiclistFragment,
     }
 
 
+
+
     @Override
     public void onItemClick(View view, int position, MusicListBean musicListBean) {
-        NeteaseMusicListDetailFragment neteaseMusicListDetailFragment = NeteaseMusicListDetailFragment.newInstance(musicListBean.getCoverImageUrl(), musicListBean.getListId(), musicListBean.getTitle());
+
+
+        MusicListDetailFragment musicListDetailFragment = MusicListDetailFragment.newInstance(musicListBean.getCoverImageUrl(), musicListBean.getListId(), musicListBean.getTitle(), Constant.NETEASETAG);
         FragmentManager fragmentManager = getParentFragment().getParentFragment().getFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.addToBackStack("mainfragment").add(R.id.main_fragment_holder, neteaseMusicListDetailFragment).hide(fragmentManager.getFragments().get(0)).commit();
+
+        musicListDetailFragment.setSharedElementEnterTransition(new DetailsTransition());
+        musicListDetailFragment.setSharedElementReturnTransition(new DetailsTransition());
+
+
+        transaction.addToBackStack("mainfragment")
+                .setCustomAnimations(R.anim.list_deatil_in,R.anim.list_detail_out,R.anim.list_deatil_in,R.anim.list_detail_out)
+                .add(R.id.main_fragment_holder, musicListDetailFragment)
+//                .hide(fragmentManager.getFragments().get(0))
+                .addSharedElement(view.findViewById(R.id.explore_muisclistcover_item_cover), "list_cover_img")
+                .commit();
     }
 }

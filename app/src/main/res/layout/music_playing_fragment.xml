@@ -32,6 +32,7 @@
             android:id="@+id/music_playing_cover"
             android:layout_width="250dp"
             android:layout_height="250dp"
+
             android:layout_centerHorizontal="true"
             android:layout_marginTop="150dp"
             />

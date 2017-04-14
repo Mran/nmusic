@@ -76,7 +76,6 @@ public class MusicPlayService extends Service implements MediaPlayer.OnPreparedL
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        showNotification();
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -206,6 +205,10 @@ public class MusicPlayService extends Service implements MediaPlayer.OnPreparedL
             notificationShowPlay(true);
             mNowIndex = index;
             playPrepar(index);
+            if (notification==null)
+            {
+                showNotification();
+            }
             sendBroadcast(Constant.MUSIC_CHANGE);
             changeNotification(nowMusicListDetailBean);
         }
@@ -324,6 +327,10 @@ public class MusicPlayService extends Service implements MediaPlayer.OnPreparedL
     }
 
     private void notificationShowPlay(boolean isplaying) {
+        if (notification==null)
+        {
+            showNotification();
+        }
         int resouceId = isplaying ? R.drawable.ic_pause : R.drawable.ic_play;
         remoteViews.setImageViewResource(R.id.notification_play, resouceId);
         NotificationManager manager = (NotificationManager)

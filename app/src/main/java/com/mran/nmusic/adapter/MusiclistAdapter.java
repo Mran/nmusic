@@ -25,7 +25,6 @@ public class MusiclistAdapter extends RecyclerView.Adapter<MusiclistAdapter.Musi
     private List<MusicListBean> musicListBeen = new ArrayList<>();
     private OnRecyclerItemClickedListener listener;
 
-    {}
 
     public MusiclistAdapter(Context context) {
         this.context = context;
@@ -41,15 +40,13 @@ public class MusiclistAdapter extends RecyclerView.Adapter<MusiclistAdapter.Musi
 
     @Override
     public void onBindViewHolder(MusiclistAdapter.MusicListItemHolder holder, final int position) {
-
+        holder.musiclistCover.setTransitionName("list_img" + position);
         Glide.with(context)
                 .load(musicListBeen.get(position).getCoverImageUrl())
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .crossFade()
                 .fitCenter()
-                //                        .placeholder(R.mipmap.vinyl_disc)
                 .into(holder.musiclistCover);
-        //        Picasso.with(context).load(musicListBeen.get(position).getCoverImageUrl()).fit().into(holder.musiclistCover);
         holder.musiclistTitle.setText(musicListBeen.get(position).getTitle());
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override

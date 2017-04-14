@@ -2,7 +2,6 @@ package com.mran.nmusic.musicplaying.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -18,9 +17,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mran.nmusic.BaseApplication;
 import com.mran.nmusic.BaseFragment;
 import com.mran.nmusic.Constant;
-import com.mran.nmusic.service.MusicPlayer;
 import com.mran.nmusic.R;
 import com.mran.nmusic.mainactivity.MainActivity;
+import com.mran.nmusic.service.MusicPlayer;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
@@ -40,7 +39,7 @@ public class MusicPlayingFragment extends BaseFragment implements View.OnTouchLi
     private ImageButton playModeButton;
     private Toolbar toolbar;
     private MainActivity mainActivity;
-    private CoordinatorLayout coordinatorLayout;
+
     private String musicCoverurl;
     private String musicid;
     private String musicTitle;
@@ -83,8 +82,8 @@ public class MusicPlayingFragment extends BaseFragment implements View.OnTouchLi
     }
 
     private void bindview() {
-        coordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.music_playing_coordinator);
         musicCoverImage = (ImageView) view.findViewById(R.id.music_playing_cover);
+        musicCoverImage.setTransitionName("playing_music_playing_cover");
         backGroundImage = (ImageView) view.findViewById(R.id.music_playing_back);
         toolbar = (Toolbar) view.findViewById(R.id.music_playing_toolbar);
 
@@ -127,7 +126,7 @@ public class MusicPlayingFragment extends BaseFragment implements View.OnTouchLi
         setView(MusicPlayer.getMusicImgUrl(), MusicPlayer.getMusicId(), MusicPlayer.getMusicName(), MusicPlayer.getMusicSinger());
     }
 
-    public void setView(String musicCoverurl, String musicId, String musicTitle, String singer) {
+    private void setView(String musicCoverurl, String musicId, String musicTitle, String singer) {
         this.musicCoverurl = musicCoverurl;
         this.musicid = musicId;
         this.musicTitle = musicTitle;
@@ -184,6 +183,7 @@ public class MusicPlayingFragment extends BaseFragment implements View.OnTouchLi
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+        mainActivity.hideBottomSheet();
         return true;
     }
 
