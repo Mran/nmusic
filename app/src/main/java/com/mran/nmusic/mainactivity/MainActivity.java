@@ -101,6 +101,12 @@ public class MainActivity extends BaseActivity implements IMainActivity, View.On
         bottomMusicControlPlay.setOnClickListener(this);
         bottomMusicControlNext.setOnClickListener(this);
         musicControlLinearLayout.setOnTouchListener(this);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         musicPlayingFragment = MusicPlayingFragment.newInstance(isplaying, "", "", "没有歌曲", "");
         bottomSheetBehavior = BottomSheetBehavior.from(bottomsheetPlaylistRecycleview);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);

@@ -1,6 +1,7 @@
 package com.mran.nmusic.musiclistdetail.view;
 
 
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -12,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -37,7 +39,7 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
  * Created by M on 2017/4/9.
  */
 
-public class MusicListDetailFragment extends Fragment implements IMusicListDetailFragment, MusiclistDetailAdapter.OnRecyclerItemClickedListener, View.OnClickListener {
+public class MusicListDetailFragment extends Fragment implements IMusicListDetailFragment, MusiclistDetailAdapter.OnRecyclerItemClickedListener, View.OnClickListener, View.OnTouchListener {
     private View view;
     private Toolbar toolbar;
     private RecyclerView listRecyclerView;
@@ -82,6 +84,7 @@ public class MusicListDetailFragment extends Fragment implements IMusicListDetai
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.musiclist_detail_fragment, container, false);
         mMusiclistDetailPresenterCompls = new MusiclistDetailPresenterCompls(BaseApplication.getContext(), this);
+        view.setOnTouchListener(this);
         bindView();
         initView();
         return view;
@@ -104,16 +107,20 @@ public class MusicListDetailFragment extends Fragment implements IMusicListDetai
         playallButton = (Button) view.findViewById(R.id.musiclist_detail_fragment_playall_button);
     }
 
+    void finishThis() {
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentManager.popBackStack();
+        fragmentTransaction.commit();
+    }
+
     void initView() {
         toolbar.setNavigationIcon(R.drawable.back_material);
         toolbar.setTitleTextColor(ContextCompat.getColor(BaseApplication.getContext(), R.color.main_tab_color));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentManager.popBackStack();
-                fragmentTransaction.commit();
+                finishThis();
             }
         });
         playallButton.setOnClickListener(this);
@@ -189,4 +196,46 @@ public class MusicListDetailFragment extends Fragment implements IMusicListDetai
     public void onItemClick(View view, int position, MusicListDetailBean musicListDetailBean) {
         MusicPlayer.addMusic(musicListDetailBean);
     }
+
+    private int mXPosition;
+    private int offsetx;
+
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        int action = motionEvent.getAction();
+
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                mXPosition = (int) motionEvent.getX();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                offsetx = (int) (motionEvent.getX() - mXPosition);
+                if (view.getX() + offsetx >= 0)
+                    view.offsetLeftAndRight(offsetx);
+                break;
+            case MotionEvent.ACTION_UP:
+                ObjectAnimator animator = new ObjectAnimator();
+                animator.setTarget(view);
+                if (view.getX() < view.getWidth() / 5) {
+
+//                    view.startAnimation(new TranslateAnimation(0,200, 0, 0));
+//                    view.offsetLeftAndRight((int) -view.getX());
+                    view.animate().translationX(-view.getLeft()).start();
+//                    view.scrollTo(100,0);
+                } else {
+                    view.animate().translationX(view.getWidth() - view.getLeft()).start();
+
+//                    view.offsetLeftAndRight((int) (view.getWidth() - view.getX()));
+                    finishThis();
+                }
+                break;
+            default:
+                break;
+
+        }
+        return false;
+    }
+
+
 }

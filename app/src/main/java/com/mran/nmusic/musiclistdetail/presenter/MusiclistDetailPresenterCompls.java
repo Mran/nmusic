@@ -74,7 +74,7 @@ private Subscriber subscriber;
     }
     public  void getCloudMusicListDetail(String listid) {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("id", 520444918);
+        jsonObject.addProperty("id", listid);
         jsonObject.addProperty("offset", 0);
         jsonObject.addProperty("csrf_token", "");
         jsonObject.addProperty("total", "True");
